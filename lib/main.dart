@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_em/reusable_components/DateTimeSelector.dart';
 import 'package:plan_em/reusable_components/InputFieldWithLabel.dart';
 import 'package:plan_em/reusable_components/PrimaryButton.dart';
 
@@ -29,8 +30,8 @@ class MyApp extends StatelessWidget {
                 InputFieldWithLabel(
                     label: "Title",
                     hint: "Design team meeting",
-                    width: 300,
-                    endIcon: Icons.abc),
+                    width: 300),
+                DateTimeSelector(label: "Deadline", hint: "2021-02-26", width: 300, isDatePicker: true),
                 PrimaryButton(label: "Create a task", onClickFunction: () {})
               ],
             ),

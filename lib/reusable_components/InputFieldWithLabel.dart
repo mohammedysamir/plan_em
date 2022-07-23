@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
-class InputFieldWithLabel extends StatelessWidget {
-  String label, hint;
-  int width;
-  InputFieldWithLabel(
+class InputFieldWithLabel extends StatefulWidget {
+  final String label, hint;
+  final int width;
+  const InputFieldWithLabel(
       {Key? key, required this.label, required this.hint, required this.width})
       : super(key: key);
 
+  @override
+  State<InputFieldWithLabel> createState() => _InputFieldWithLabelState();
+}
+
+class _InputFieldWithLabelState extends State<InputFieldWithLabel> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +22,7 @@ class InputFieldWithLabel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              label,
+              widget.label,
               style: const TextStyle(
                   color: Colors.black87,
                   fontSize: 15,
@@ -28,7 +33,7 @@ class InputFieldWithLabel extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
               child: TextFormField(
                 decoration: InputDecoration(
-                  labelText: hint,
+                  labelText: widget.hint,
                   fillColor: Colors.black12,
                   filled: true,
                 ),
