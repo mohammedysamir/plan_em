@@ -4,6 +4,7 @@ import 'package:plan_em/reusable_components/InputFieldWithLabel.dart';
 import 'package:plan_em/reusable_components/PrimaryButton.dart';
 
 class TaskCreationScreen extends StatefulWidget {
+  static const String routeName="/TaskCreationScreen";
   const TaskCreationScreen({Key? key}) : super(key: key);
 
   @override
