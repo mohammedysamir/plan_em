@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../reusable_components/Constants.dart';
 
 class Task {
   final String taskLabel;
@@ -16,17 +16,3 @@ class Task {
       this.deadline,
       this.reminder});
 }
-
-/*
-* Enumeration to make the repetition discrete not a string.
-* */
-enum Repetition { daily, weekly, monthly, yearly }
-
-const List Reminder = [
-  "10 minutes early",
-  "30 minutes early",
-  "1 hour early",
-  "1 day early",
-  "1 week before",
-  "1 month before"
-];
