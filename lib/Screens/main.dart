@@ -46,6 +46,11 @@ class _MyAppState extends State<MyApp> {
         appBarTheme: AppBarTheme(
             backgroundColor: Theme.of(context).backgroundColor,
             foregroundColor: Theme.of(context).primaryColor,
+            titleTextStyle: TextStyle(
+                fontSize: 25,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 17, 17, 17)),
             iconTheme: IconThemeData(
               color: Theme.of(context).primaryColor,
             )),
@@ -126,11 +131,6 @@ class _HomePageState extends State<HomePage> {
           ],
           title: Text(
             "Board",
-            style: TextStyle(
-                fontSize: 25,
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor),
           ),
           backgroundColor: Theme.of(context).backgroundColor,
           automaticallyImplyLeading: false,
