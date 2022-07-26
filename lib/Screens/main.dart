@@ -4,15 +4,21 @@ import 'package:plan_em/Screens/Tasks/AllTasks.dart';
 import 'package:plan_em/Screens/Tasks/CompletedTasks.dart';
 import 'package:plan_em/Screens/Tasks/FavoriteTasks.dart';
 import 'package:plan_em/Screens/Tasks/UncompletedTasks.dart';
-import 'package:plan_em/reusable_components/PrimaryButton.dart';
+
+import '../reusable_components/PrimaryButton.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Color.fromARGB(255, 17, 17, 17),
         backgroundColor: Colors.white,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).buttonColor))),
         accentColor: Colors.teal,
         textTheme: TextTheme(
             headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
@@ -46,39 +56,50 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static String routeName = '/HomeScreen';
 
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
+    List<Tab> tabsHeaders = [
+      Tab(
+          child: Text(
+        "All",
+        style: Theme.of(context).textTheme.bodyText2,
+      )),
+      Tab(
+          child:
+              Text("Completed", style: Theme.of(context).textTheme.bodyText2)),
+      Tab(
+          child: Text("Uncompleted",
+              style: Theme.of(context).textTheme.bodyText2)),
+      Tab(
+          child:
+              Text("Favorite", style: Theme.of(context).textTheme.bodyText2)),
+    ];
+
+    List<Widget> tabs = [
+      AllTasks(),
+      CompletedTasks(),
+      UncompletedTasks(),
+      FavoriteTasks()
+    ];
+
     return DefaultTabController(
-      length: 4,
+      length: tabsHeaders.length,
       initialIndex: 0,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           //define tab bar header
-          bottom: TabBar(
-            indicatorColor: Colors.green,
-            tabs: [
-              Tab(
-                  child: Text(
-                "All",
-                style: Theme.of(context).textTheme.bodyText2,
-              )),
-              Tab(
-                  child: Text("Completed",
-                      style: Theme.of(context).textTheme.bodyText2)),
-              Tab(
-                  child: Text("Uncompleted",
-                      style: Theme.of(context).textTheme.bodyText2)),
-              Tab(
-                  child: Text("Favorite",
-                      style: Theme.of(context).textTheme.bodyText2)),
-            ],
-          ),
+          bottom: TabBar(indicatorColor: Colors.teal, tabs: tabsHeaders),
           actions: const [
             //todo: handle clicks
             Padding(
@@ -114,25 +135,19 @@ class HomePage extends StatelessWidget {
           backgroundColor: Theme.of(context).backgroundColor,
           automaticallyImplyLeading: false,
         ),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //define different tabs/screens
-              const TabBarView(children: [
-                AllTasks(),
-                CompletedTasks(),
-                UncompletedTasks(),
-                FavoriteTasks()
-              ]),
-              //todo: add button to task screens.
-              // PrimaryButton(
-              //     label: "Add a Task",
-              //     onClickFunction: () {
-              //       Navigator.pushNamed(context, TaskCreationScreen.routeName);
-              //     })
-            ],
-          ),
+        body: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: TabBarView(children: tabs),
+            ),
+            PrimaryButton(
+                label: "Add a Task",
+                onPressedFunction: () {
+                  Navigator.pushNamed(context, TaskCreationScreen.routeName);
+                  print("Should navigate");
+                })
+          ],
         ),
       ),
     );
