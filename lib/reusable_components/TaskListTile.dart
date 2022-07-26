@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class TaskListTile extends StatefulWidget {
   String taskLabel;
@@ -17,9 +18,17 @@ class TaskListTile extends StatefulWidget {
 class _TaskListTileState extends State<TaskListTile> {
   @override
   Widget build(BuildContext context) {
+    Random random=new Random();
     return ListTile(
       leading: Checkbox(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
           value: widget.isComplete,
+          fillColor: MaterialStateProperty.all<Color>(Color.fromRGBO(
+            random.nextInt(255)+100,
+            random.nextInt(255)+100,
+            random.nextInt(255)+100,
+            1,
+          )),
           onChanged: (change) {
             setState(() {
               widget.isComplete = change!;
