@@ -35,6 +35,12 @@ class _InputFieldWithLabelState extends State<InputFieldWithLabel> {
                 decoration: InputDecoration(
                   labelText: widget.hint,
                   fillColor: Colors.black12,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).accentColor
+                    )
+                  ),
+
                   filled: true,
                 ),
               ),

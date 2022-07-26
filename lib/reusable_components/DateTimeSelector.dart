@@ -48,6 +48,11 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
                     labelText: widget.hint,
                     fillColor: Colors.black12,
                     filled: true,
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).accentColor
+                        )
+                    ),
                     suffixIcon: widget.isDatePicker
                         ? const Icon(Icons.date_range_outlined)
                         : const Icon(Icons.timer_outlined)),
