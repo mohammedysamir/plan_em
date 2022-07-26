@@ -65,7 +65,7 @@ class _TaskCreationScreenState extends State<TaskCreationScreen> {
           ),
           PrimaryButton(
               label: "Create a Task",
-              onClickFunction: () {
+              onPressedFunction: () {
                 //implement onClick for submit button
               })
         ],
