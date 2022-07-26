@@ -25,6 +25,7 @@ class _DateTimeSelectorState extends State<DateTimeSelector> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
+      width: widget.width.toDouble(),
       padding: const EdgeInsets.all(16),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
