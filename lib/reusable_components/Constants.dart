@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-/*
-* Enumeration to make the repetition discrete not a string.
-* */
-enum Repetition { daily, weekly, monthly, yearly }
+var Repetition =["daily", "weekly", "monthly", "yearly" ];
 
-const List Reminder = [
+var Reminder = [
   "10 minutes early",
   "30 minutes early",
   "1 hour early",

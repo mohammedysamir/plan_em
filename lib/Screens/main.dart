@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> {
       length: tabsHeaders.length,
       initialIndex: 0,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           //define tab bar header
@@ -145,7 +146,6 @@ class _HomePageState extends State<HomePage> {
                 label: "Add a Task",
                 onPressedFunction: () {
                   Navigator.pushNamed(context, TaskCreationScreen.routeName);
-                  print("Should navigate");
                 })
           ],
         ),

@@ -7,7 +7,7 @@ Widget InputFieldWithLabel(
         required int width,
         required BuildContext context}) =>
     Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       padding: const EdgeInsets.all(16),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

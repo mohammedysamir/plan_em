@@ -8,7 +8,7 @@ import '../../reusable_components/Constants.dart';
 List<Task> tasks = <Task>[
   Task(
       taskLabel: "this is task 2",
-      repetition: Repetition.daily,
+      repetition: Repetition[1],
       startTime: TimeOfDay.now().toString(),
       endTime: TimeOfDay.now().toString(),
       deadline: DateTime.now().toString(),
@@ -16,7 +16,7 @@ List<Task> tasks = <Task>[
       isFavorite: true),
   Task(
       taskLabel: "this is task 1",
-      repetition: Repetition.daily,
+      repetition: Repetition[0],
       startTime: TimeOfDay.now().toString(),
       endTime: TimeOfDay.now().toString(),
       deadline: DateTime.now().toString(),
@@ -24,7 +24,7 @@ List<Task> tasks = <Task>[
       isFavorite: false),
   Task(
       taskLabel: "this is task 3",
-      repetition: Repetition.daily,
+      repetition: Repetition[0],
       startTime: TimeOfDay.now().toString(),
       endTime: TimeOfDay.now().toString(),
       deadline: DateTime.now().toString(),

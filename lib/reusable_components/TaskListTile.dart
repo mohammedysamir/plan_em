@@ -29,6 +29,7 @@ class _TaskListTileState extends State<TaskListTile> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5))),
             value: widget.isComplete,
+            //todo: make the color non-changing using bloc
             fillColor: MaterialStateProperty.all<Color>(
                 colors[random.nextInt(colors.length)]),
             onChanged: (change) {

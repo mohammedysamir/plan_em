@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 Widget DateTimeSelector(
         {required String label,
@@ -8,7 +9,7 @@ Widget DateTimeSelector(
         required BuildContext context,
         required TextEditingController controller}) =>
     Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       width: width.toDouble(),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -48,18 +49,20 @@ Widget DateTimeSelector(
                         initialDate: DateTime.now(),
                         firstDate: DateTime(DateTime.now().year),
                         lastDate: DateTime(2200));
+                    controller.text =
+                        DateFormat("yyyy-MM-dd").format(datePicker!);
                   } else {
                     timePicker = await showTimePicker(
                         context: context,
                         initialTime: const TimeOfDay(hour: 11, minute: 0));
+                    bool isPM=timePicker!.hour > 12;
+                    controller.text = DateFormat("hh:mm").format(DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        isPM? (timePicker.hour + 12) :timePicker.hour,
+                        timePicker.minute));
                   }
-                  // setState(() {
-                  //   controller.text = datePicker != null
-                  //       ? DateFormat('yyyy-MM-dd').format(datePicker)
-                  //       : timePicker != null
-                  //       ? timePicker.format(context)
-                  //       : "";
-                  // });
                 },
               ),
             ),
