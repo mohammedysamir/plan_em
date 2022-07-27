@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 var Repetition =["none","daily", "weekly", "monthly", "yearly" ];
 
 var Reminder = [
+  "none",
   "10 minutes early",
   "30 minutes early",
   "1 hour early",
