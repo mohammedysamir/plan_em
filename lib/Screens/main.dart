@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plan_em/Screens/ScheduleScreen.dart';
 import 'package:plan_em/Screens/TaskCreationScreen.dart';
 import 'package:plan_em/Screens/Tasks/AllTasks.dart';
 import 'package:plan_em/Screens/Tasks/CompletedTasks.dart';
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         HomePage.routeName: (context) => const HomePage(),
         TaskCreationScreen.routeName: (context) => const TaskCreationScreen(),
+        ScheduleScreen.routeName: (context) => const ScheduleScreen(),
       },
       title: "Plan 'em",
       debugShowCheckedModeBanner: false,
@@ -52,7 +54,7 @@ class _MyAppState extends State<MyApp> {
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 17, 17, 17)),
             iconTheme: IconThemeData(
-              color: Theme.of(context).primaryColor,
+              color: Color.fromARGB(255, 17, 17, 17),
             )),
         buttonColor: Colors.teal,
       ),
@@ -106,27 +108,32 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           //define tab bar header
           bottom: TabBar(indicatorColor: Colors.teal, tabs: tabsHeaders),
-          actions: const [
-            //todo: handle clicks
+          actions: [
             Padding(
-              padding: EdgeInsets.only(left: 7, right: 7),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Icon(
                 Icons.search,
-                size: 28,
+                size: 25,
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 7, right: 7),
+              padding: EdgeInsets.only(left: 10, right: 10),
               child: Icon(
                 Icons.notifications_none_outlined,
-                size: 28,
+                size: 25,
               ),
             ),
+            //navigate to schedule screen
             Padding(
-              padding: EdgeInsets.only(left: 7, right: 7),
-              child: Icon(
-                Icons.menu,
-                size: 28,
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, ScheduleScreen.routeName);
+                },
+                child: Icon(
+                  Icons.schedule_outlined,
+                  size: 25,
+                ),
               ),
             ),
           ],
