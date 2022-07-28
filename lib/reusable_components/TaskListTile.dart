@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:plan_em/TaskDatabase.dart';
 
+import '../Data models/Task.dart';
 import 'Constants.dart';
 
 class TaskListTile extends StatefulWidget {
@@ -21,6 +22,8 @@ class TaskListTile extends StatefulWidget {
 }
 
 class _TaskListTileState extends State<TaskListTile> {
+  TaskDatabase databaseHandler=TaskDatabase();
+
   @override
   Widget build(BuildContext context) {
     Random random = new Random();
@@ -35,9 +38,13 @@ class _TaskListTileState extends State<TaskListTile> {
             onChanged: (change) {
               setState(() {
                 widget.isComplete = change!;
-                TaskDatabase.instance
-                    .updateCompletedTask(widget.taskLabel, widget.isComplete);
-                //todo: test update function
+                //todo: test sending task object
+                databaseHandler.updateCompletedTask(
+                    Task(
+                        taskLabel: widget.taskLabel,
+                        isFavorite: widget.isFavorite,
+                        isComplete: widget.isComplete),
+                    widget.isComplete);
               });
             }),
         title: Text(
@@ -54,8 +61,12 @@ class _TaskListTileState extends State<TaskListTile> {
             //add function to mark task as favorite
             setState(() {
               widget.isFavorite = !widget.isFavorite;
-              TaskDatabase.instance
-                  .updateFavoriteTask(widget.taskLabel, widget.isFavorite);
+              databaseHandler.updateFavoriteTask(
+                  Task(
+                      taskLabel: widget.taskLabel,
+                      isFavorite: widget.isFavorite,
+                      isComplete: widget.isComplete),
+                  widget.isFavorite);
               //todo: test update function
             });
           },
