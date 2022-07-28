@@ -16,6 +16,15 @@ class TaskCubit extends Cubit<TaskState> {
   }
 
 //todo: test emits
+  List<Task> fetchAllTasks() {
+    List<Task> t = <Task>[];
+    databaseHandler.getAllTasks().then((tasks) => {
+          emit(TasksFetched(tasks)),
+          t = tasks,
+        });
+    print("Cubit: fetch Completed tasks");
+    return t;
+  }
   List<Task> fetchCompletedTasks() {
     List<Task> t = <Task>[];
     databaseHandler.getCompletedTasks().then((tasks) => {
