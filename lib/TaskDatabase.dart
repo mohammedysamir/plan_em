@@ -1,30 +1,14 @@
+import 'package:path/path.dart';
 import 'package:plan_em/Data models/Task.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TaskDatabase {
   final int version = 1;
-  static final TaskDatabase instance = TaskDatabase._internal();
-  late Database? database = null;
-//clean below function
-  Future<Database?> get _database async {
-    if (database != null) return database;
-    database = await initiateDatabase();
-    return database;
-  }
-
-  factory TaskDatabase() {
-    return instance;
-  }
-
-  TaskDatabase._internal();
-
-  String getDatabasePath() {
-    return getDatabasePath() + '/plan_em.db';
-  }
 
   Future<Database> initiateDatabase() async {
-    return await openDatabase(
-      getDatabasePath(),
+    String dbPath = await getDatabasesPath();
+    return openDatabase(
+      join(dbPath, 'plan_em.db'),
       version: this.version,
       onCreate: (db, version) async {
         //todo: test creating table query and match it with task.dart
@@ -35,52 +19,59 @@ class TaskDatabase {
   }
 
   Future<void> insertTask(Task t) async {
-    await database?.rawInsert(
-        "INSERT INTO tasks(label, repetition, deadline, start, end, reminder, isFavorite,isComplete) VALUES("
-        "$t.taskLabel, ${t.repetition.toString()},${t.deadline.toString()},${t.startTime.toString()},${t.endTime.toString()},${t.reminder.toString()},${t.isFavorite},${t.isComplete})");
+    final db = await initiateDatabase();
+    await db.insert('tasks', t.toMap());
+    // "INSERT INTO tasks(label, repetition, deadline, start, end, reminder, isFavorite,isComplete) VALUES("
+    // "$t.taskLabel, ${t.repetition.toString()},${t.deadline.toString()},${t.startTime.toString()},${t.endTime.toString()},${t.reminder.toString()},${t.isFavorite},${t.isComplete})");
   }
 
-  //
-  // void InsertCompletedTask(Task t) async {
-  //   await database?.rawInsert(
-  //       "INSERT INTO tasks(label, repetition, deadline, start, end, reminder, isFavorite,isComplete) VALUES("
-  //       "$t.taskLabel, ${t.repetition.toString()},${t.deadline.toString()},${t.startTime.toString()},${t.endTime.toString()},${t.reminder.toString()},${t.isFavorite},${true})");
-  // }
-  //
-  // void InsertFavoriteTask(Task t) async {
-  //   await database?.rawInsert(
-  //       "INSERT INTO tasks(label, repetition, deadline, start, end, reminder, isFavorite,isComplete) VALUES("
-  //       "$t.taskLabel, ${t.repetition.toString()},${t.deadline.toString()},${t.startTime.toString()},${t.endTime.toString()},${t.reminder.toString()},${true},${t.isComplete})");
-  // }
-
-  void getAllTasks() async {
-    await database?.rawQuery("SELECT * from tasks");
+  Future<List<Task>> getAllTasks() async {
+    final db = await initiateDatabase();
+    final List<Map<String, Object?>> result = await db.query('tasks');
+    return result.map((e) => Task.fromMap(e)).toList();
   }
 
-  void getCompletedTasks() async {
-    await database?.rawQuery("SELECT * from tasks where isComplete = ${true}");
+  Future<List<Task>> getCompletedTasks() async {
+    final db = await initiateDatabase();
+    final List<Map<String, Object?>> result =
+        await db.query('tasks', where: "isComplete =?", whereArgs: ["${true}"]);
+    return result.map((e) => Task.fromMap(e)).toList();
+    // await database?.rawQuery("SELECT * from tasks where isComplete = ${true}");
   }
 
-  void getUncompletedTasks() async {
-    await database?.rawQuery("SELECT * from tasks where isComplete = ${false}");
+  Future<List<Task>> getUncompletedTasks() async {
+    final db = await initiateDatabase();
+    final List<Map<String, Object?>> result = await db
+        .query('tasks', where: "isComplete =?", whereArgs: ["${false}"]);
+    return result.map((e) => Task.fromMap(e)).toList();
   }
 
-  void getFavoriteTasks() async {
-    await database?.rawQuery("SELECT * from tasks where isFavorite = ${true}");
+  Future<List<Task>> getFavoriteTasks() async {
+    final db = await initiateDatabase();
+    final List<Map<String, Object?>> result =
+        await db.query('tasks', where: "isFavorite =?", whereArgs: ["${true}"]);
+    return result.map((e) => Task.fromMap(e)).toList();
   }
 
-  void updateFavoriteTask(String taskLabel, bool isFavorite) async {
-    await database?.rawUpdate("UPDATE tasks SET isFavorite = ? WHERE label = ?",
-        [isFavorite, taskLabel]);
+  Future<int> updateFavoriteTask(Task task, bool isFavorite) async {
+    final db = await initiateDatabase();
+    int result = await db.update('tasks', task.toMap(),
+        where: 'isFavorite=?', whereArgs: [isFavorite]);
+    return result; //return # updated records
   }
 
-  void updateCompletedTask(String taskLabel, bool isCompleted) async {
-    await database?.rawUpdate("UPDATE tasks SET isComplete = ? WHERE label = ?",
-        [isCompleted, taskLabel]);
+  Future<int> updateCompletedTask(Task task, bool isCompleted) async {
+    final db = await initiateDatabase();
+    int result = await db.update('tasks', task.toMap(),
+        where: 'isComplete=?', whereArgs: [isCompleted]);
+    return result; //return # updated records
   }
 
-  void deleteTask(String taskLabel) async {
-    await database?.rawDelete('DELETE FROM tasks WHERE label = ?', [taskLabel]);
+  Future<int> deleteTask(String taskLabel) async {
+    final db = await initiateDatabase();
+    int result =
+        await db.rawDelete('DELETE FROM tasks WHERE label = ?', [taskLabel]);
+    return result; //return # deleted tasks
   }
 }
 //todo: test database functionalities
