@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:plan_em/reusable_components/DateTimeSelector.dart';
-import 'package:plan_em/reusable_components/InputFieldWithLabel.dart';
-import 'package:plan_em/reusable_components/PrimaryButton.dart';
+import 'package:plan_em/reusable_components/CustomDropDownList.dart';
+
+import '../Data models/Task.dart';
+import '../TaskDatabase.dart';
+import '../reusable_components/Constants.dart';
+import '../reusable_components/DateTimeSelector.dart';
+import '../reusable_components/InputFieldWithLabel.dart';
+import '../reusable_components/PrimaryButton.dart';
 
 class TaskCreationScreen extends StatefulWidget {
-  static const String routeName="/TaskCreationScreen";
+  static const String routeName = "/TaskCreationScreen";
+
   const TaskCreationScreen({Key? key}) : super(key: key);
 
   @override
@@ -12,64 +18,128 @@ class TaskCreationScreen extends StatefulWidget {
 }
 
 class _TaskCreationScreenState extends State<TaskCreationScreen> {
+  var taskLabelController = TextEditingController();
+  var taskStartTimeController = TextEditingController();
+  var taskEndTimeController = TextEditingController();
+  var taskDeadLineController = TextEditingController();
+  var taskRepetitionController = TextEditingController();
+  var taskReminderController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    //set initial values
+    taskReminderController.text = Reminder[0];
+    taskRepetitionController.text = Repetition[0];
+    late TaskDatabase databaseHandler=TaskDatabase();
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: false,
         foregroundColor: Colors.black87,
         title: const Text(
           "Add Task",
-          style: TextStyle(
-            fontSize: 18,
-          ),
         ),
-        leading: const Icon(Icons.arrow_back_ios),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          color: Theme.of(context).primaryColor,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          //form
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const InputFieldWithLabel(
-                  label: "Title",
-                  hint: "Finish to-do app implementation",
-                  width: 300),
-              const DateTimeSelector(
-                  label: "Deadline",
-                  hint: "2021-02-22",
-                  width: 300,
-                  isDatePicker: true),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  DateTimeSelector(
-                      label: "Start time",
-                      hint: "9:00 Am",
-                      width: 120,
-                      isDatePicker: false),
-                  DateTimeSelector(
-                      label: "End time",
-                      hint: "1:00 Pm",
-                      width: 120,
-                      isDatePicker: false),
-                ],
-              ),
-              //todo: add last 2 fields
-            ],
-          ),
-          PrimaryButton(
-              label: "Create a Task",
-              onPressedFunction: () {
-                //implement onClick for submit button
-              })
-        ],
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.87,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //form
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InputFieldWithLabel(
+                    label: "Title",
+                    hint: "Finish to-do app implementation",
+                    width: 300,
+                    controller: taskLabelController,
+                    context: context),
+                DateTimeSelector(
+                    label: "Deadline",
+                    hint: "2021-02-22",
+                    width: 400,
+                    isDatePicker: true,
+                    context: context,
+                    controller: taskDeadLineController),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: DateTimeSelector(
+                          label: "Start time",
+                          hint: "start time",
+                          width: 170,
+                          isDatePicker: false,
+                          context: context,
+                          controller: taskStartTimeController),
+                    ),
+                    Expanded(
+                      child: DateTimeSelector(
+                          label: "End time",
+                          hint: "end time",
+                          width: 170,
+                          isDatePicker: false,
+                          context: context,
+                          controller: taskEndTimeController),
+                    )
+                  ],
+                ),
+                //Reminder selector
+                CustomDropDownList(
+                  label: "Remind",
+                  context: context,
+                  width: 400,
+                  items: Reminder,
+                  controller: taskReminderController,
+                ),
+                //Repetition selector
+                CustomDropDownList(
+                  label: "Repetition",
+                  context: context,
+                  width: 400,
+                  items: Repetition,
+                  controller: taskRepetitionController,
+                ),
+              ],
+            ),
+            PrimaryButton(
+                label: "Create a Task",
+                onPressedFunction: () {
+                  print('Create button clicked');
+                  //create new task
+                  Task t = new Task(
+                      taskLabel: taskLabelController.text,
+                      isComplete: false,
+                      isFavorite: false,
+                      deadline: taskDeadLineController.text,
+                      startTime: taskStartTimeController.text,
+                      endTime: taskEndTimeController.text,
+                      repetition: taskRepetitionController.text,
+                      reminder: taskReminderController.text);
+                  //insert new task
+                  databaseHandler.insertTask(t);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Task has been created successfully'),
+                  ));
+                  Navigator.pop(context);
+                })
+          ],
+        ),
       ),
     );
   }
 }
+//todo: add validation on start/end time and title must be exist
