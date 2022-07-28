@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../Cubits/task_cubit.dart';
+import '../Data models/Task.dart';
 import '../reusable_components/TaskSchedule.dart';
-
-List<TaskSchedule> tasks = [
-  TaskSchedule(
-      taskLabel: "Design team meeting", startTime: "9:00 AM", isComplete: true),
-  TaskSchedule(
-      taskLabel: "Making wireframes", startTime: "11:00 AM", isComplete: false),
-  TaskSchedule(
-      taskLabel: "Check emails", startTime: "13:00 PM", isComplete: false),
-  TaskSchedule(
-      taskLabel: "Meeting with Murman",
-      startTime: "13:30 PM",
-      isComplete: false),
-];
-//todo: remove dummy data and replace it with db tasks based on selected date, solve scrollable issue
 
 class ScheduleScreen extends StatefulWidget {
   static const String routeName = "/ScheduleScreen";
@@ -26,6 +15,16 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
+  late List<Task> deadlineTasks;
+
+  @override
+  void initState() {
+    super.initState();
+    //todo: remove dummy date.
+    deadlineTasks =
+        BlocProvider.of<TaskCubit>(context).fetchTaskByDate("2022-07-28");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,8 +56,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 Container(
                   height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width,
-                  color: Colors.amber,
-                  child: Text("THIS IS CALENDER"),
                 ),
                 Divider(
                   thickness: 2,
@@ -80,16 +77,22 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ),
                 //display list of TaskSchedule tiles
                 Expanded(
-                  child: ListView.builder(
-                      //to be assigned to fetched list.size
-                      itemCount: tasks.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return TaskSchedule(
-                          startTime: tasks[index].startTime,
-                          taskLabel: tasks[index].taskLabel,
-                          isComplete: tasks[index].isComplete,
-                        );
-                      }),
+                  child: BlocBuilder<TaskCubit, TaskState>(
+                    builder: (context, state) {
+                      return ListView.builder(
+                          //to be assigned to fetched list.size
+                          itemCount: deadlineTasks.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return TaskSchedule(
+                              startTime: deadlineTasks[index].startTime!,
+                              taskLabel: deadlineTasks[index].taskLabel,
+                              isComplete: deadlineTasks[index].isComplete == 1
+                                  ? true
+                                  : false,
+                            );
+                          });
+                    },
+                  ),
                 ),
                 //todo: fetch data by date and present it
               ],
