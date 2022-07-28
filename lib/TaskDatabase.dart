@@ -36,6 +36,13 @@ class TaskDatabase {
     return result.map((e) => Task.fromMap(e)).toList();
   }
 
+  Future<List<Task>> getTasksByDate(String deadline) async {
+    final db = await initiateDatabase();
+    final List<Map<String, Object?>> result =
+        await db.query('tasks', where: "deadline =?", whereArgs: ["${deadline}"]);
+    return result.map((e) => Task.fromMap(e)).toList();
+  }
+
   Future<List<Task>> getUncompletedTasks() async {
     final db = await initiateDatabase();
     final List<Map<String, Object?>> result = await db

@@ -61,6 +61,15 @@ class TaskCubit extends Cubit<TaskState> {
     print("Cubit: fetch Favorite tasks");
     return t;
   }
+  List<Task> fetchTaskByDate(String date) {
+    List<Task> t = <Task>[];
+    databaseHandler.getTasksByDate(date).then((tasks) => {
+          emit(TasksFetched(tasks)),
+          t = tasks,
+        });
+    print("Cubit: fetch deadline tasks");
+    return t;
+  }
 
   void markIsCompleted(Task task, int isCompleted) {
     databaseHandler.updateCompletedTask(task, isCompleted);
