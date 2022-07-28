@@ -1,9 +1,7 @@
-import '../reusable_components/Constants.dart';
-
 class Task {
   final String taskLabel;
   final String? repetition, reminder,startTime,endTime,deadline;
-  final bool isFavorite, isComplete;
+  final int isFavorite, isComplete;
 
   const Task(
       {required this.taskLabel,
@@ -20,12 +18,12 @@ class Task {
         isFavorite = res["isFavorite"],
         isComplete = res["isComplete"],
         repetition = res["repetition"],
-        startTime = res["startTime"],
-        endTime = res["endTime"],
+        startTime = res["start"],
+        endTime = res["end"],
         deadline = res["deadline"],
         reminder = res["reminder"];
 
   Map<String, Object?> toMap() {
-    return {'label':taskLabel,'isFavorite': isFavorite, 'isComplete': isComplete, 'repetition': repetition, 'startTime': startTime, 'endTime':endTime,'deadline':deadline, 'reminder':reminder};
+    return {'label':taskLabel,'isFavorite': isFavorite, 'isComplete': isComplete, 'repetition': repetition, 'start': startTime, 'end':endTime,'deadline':deadline, 'reminder':reminder};
   }
 }

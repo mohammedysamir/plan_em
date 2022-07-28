@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plan_em/Cubits/task_cubit.dart';
 
 import '../../Data models/Task.dart';
-import '../../TaskDatabase.dart';
 import '../../reusable_components/TaskListTile.dart';
 
 //todo: create list of listTiles to be viewed and fetched from DB
@@ -13,24 +14,30 @@ class FavoriteTasks extends StatefulWidget {
 }
 
 class _FavoriteTasksState extends State<FavoriteTasks> {
-  late TaskDatabase databaseHandler;
+  late List<Task> favoriteTasks;
 
   @override
   initState() {
     super.initState();
-    databaseHandler = TaskDatabase();
-    databaseHandler.initiateDatabase();
+    favoriteTasks = BlocProvider.of<TaskCubit>(context).fetchFavoriteTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
-      child: FutureBuilder<List<Task>>(
-        future: databaseHandler.getFavoriteTasks(),
-        builder: (context, future) {
-          if (future.data != null) {
-            //has no data
+        height: MediaQuery.of(context).size.height * 0.75,
+        child: BlocBuilder<TaskCubit, TaskState>(builder: (context, state) {
+          if (state is TasksFetched) {
+            return ListView.builder(
+                //to be assigned to fetched list.size
+                itemCount: favoriteTasks.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return TaskListTile(
+                      taskLabel: favoriteTasks[index].taskLabel,
+                      isComplete: favoriteTasks[index].isComplete,
+                      isFavorite: favoriteTasks[index].isFavorite);
+                });
+          } else {
             return Center(
               child: Text("You haven't mark any task as favorite yet.",
                   textAlign: TextAlign.center,
@@ -39,20 +46,7 @@ class _FavoriteTasksState extends State<FavoriteTasks> {
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor)),
             );
-          } else {
-            List<Task> tasks = future.data!;
-            return ListView.builder(
-                //to be assigned to fetched list.size
-                itemCount: tasks.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return TaskListTile(
-                      taskLabel: tasks[index].taskLabel,
-                      isComplete: tasks[index].isComplete,
-                      isFavorite: tasks[index].isFavorite);
-                });
           }
-        },
-      ),
-    );
+        }));
   }
 }

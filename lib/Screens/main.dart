@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plan_em/Cubits/task_cubit.dart';
 import 'package:plan_em/Screens/ScheduleScreen.dart';
 import 'package:plan_em/Screens/TaskCreationScreen.dart';
 import 'package:plan_em/Screens/Tasks/AllTasks.dart';
@@ -23,7 +25,9 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return BlocProvider(
+        create: (context) => TaskCubit(),
+    child: MaterialApp(
       initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
@@ -59,7 +63,7 @@ class _MyAppState extends State<MyApp> {
         buttonColor: Colors.teal,
       ),
       home: const HomePage(),
-    );
+    ));
   }
 }
 
@@ -98,7 +102,6 @@ class _HomePageState extends State<HomePage> {
       UncompletedTasks(),
       FavoriteTasks()
     ];
-
     return DefaultTabController(
       length: tabsHeaders.length,
       initialIndex: 0,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plan_em/Cubits/task_cubit.dart';
 import 'package:plan_em/reusable_components/CustomDropDownList.dart';
 
 import '../Data models/Task.dart';
-import '../TaskDatabase.dart';
 import '../reusable_components/Constants.dart';
 import '../reusable_components/DateTimeSelector.dart';
 import '../reusable_components/InputFieldWithLabel.dart';
@@ -30,8 +31,6 @@ class _TaskCreationScreenState extends State<TaskCreationScreen> {
     //set initial values
     taskReminderController.text = Reminder[0];
     taskRepetitionController.text = Repetition[0];
-    late TaskDatabase databaseHandler=TaskDatabase();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -118,19 +117,18 @@ class _TaskCreationScreenState extends State<TaskCreationScreen> {
             PrimaryButton(
                 label: "Create a Task",
                 onPressedFunction: () {
-                  print('Create button clicked');
                   //create new task
                   Task t = new Task(
                       taskLabel: taskLabelController.text,
-                      isComplete: false,
-                      isFavorite: false,
+                      isComplete: 0,
+                      isFavorite: 0,
                       deadline: taskDeadLineController.text,
                       startTime: taskStartTimeController.text,
                       endTime: taskEndTimeController.text,
                       repetition: taskRepetitionController.text,
                       reminder: taskReminderController.text);
                   //insert new task
-                  databaseHandler.insertTask(t);
+                  BlocProvider.of<TaskCubit>(context).createTask(t);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Task has been created successfully'),
                   ));

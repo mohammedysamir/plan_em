@@ -15,6 +15,12 @@ class TaskCubit extends Cubit<TaskState> {
     databaseHandler.initiateDatabase();
   }
 
+  void createTask(Task task){
+    databaseHandler.insertTask(task);
+    emit(TaskCreated(task));
+    print("Cubit: Task created");
+  }
+
 //todo: test emits
   List<Task> fetchAllTasks() {
     List<Task> t = <Task>[];
@@ -22,9 +28,10 @@ class TaskCubit extends Cubit<TaskState> {
           emit(TasksFetched(tasks)),
           t = tasks,
         });
-    print("Cubit: fetch Completed tasks");
+    print("Cubit: fetch all tasks");
     return t;
   }
+
   List<Task> fetchCompletedTasks() {
     List<Task> t = <Task>[];
     databaseHandler.getCompletedTasks().then((tasks) => {
@@ -55,28 +62,28 @@ class TaskCubit extends Cubit<TaskState> {
     return t;
   }
 
-  void markIsCompleted(Task task, bool isCompleted) {
+  void markIsCompleted(Task task, int isCompleted) {
     databaseHandler.updateCompletedTask(task, isCompleted);
     print("Cubit: mark Completed/Uncompleted tasks");
-    if (isCompleted)
+    if (isCompleted==1)
       emit(TaskCompleted(task));
     else
       emit(TaskUncompleted(task));
   }
 
-  void markIsFavorite(Task task, bool isFavorite) {
-    databaseHandler.updateCompletedTask(task, isFavorite);
+  void markIsFavorite(Task task, int isFavorite) {
+    databaseHandler.updateFavoriteTask(task, isFavorite);
     print("Cubit: fetch favorite/non-favorite tasks");
-    if (isFavorite)
+    if (isFavorite==1)
       emit(TaskFavorite(task));
     else
       emit(TaskNotFavorite(task));
   }
 
-  void deleteTask(Task task){
+  void deleteTask(Task task) {
     print("Cubit: delete tasks");
     databaseHandler.deleteTask(task.taskLabel).then((value) => {
-      emit(TaskDeleted(task)),
-    });
+          emit(TaskDeleted(task)),
+        });
   }
 }
