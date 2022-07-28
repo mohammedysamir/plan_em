@@ -13,7 +13,7 @@ class TaskDatabase {
       onCreate: (db, version) async {
         //todo: test creating table query and match it with task.dart
         await db.execute(
-            'CREATE TABLE tasks(label TEXT, repetition Text, deadline TEXT, start TEXT, end TEXT, reminder TEXT,isFavorite BOOLEAN, isComplete BOOLEAN)');
+            'CREATE TABLE tasks(label TEXT NOT NULL, repetition Text, deadline TEXT, start TEXT, end TEXT, reminder TEXT,isFavorite BOOLEAN, isComplete BOOLEAN)');
       },
     );
   }
@@ -21,8 +21,6 @@ class TaskDatabase {
   Future<void> insertTask(Task t) async {
     final db = await initiateDatabase();
     await db.insert('tasks', t.toMap());
-    // "INSERT INTO tasks(label, repetition, deadline, start, end, reminder, isFavorite,isComplete) VALUES("
-    // "$t.taskLabel, ${t.repetition.toString()},${t.deadline.toString()},${t.startTime.toString()},${t.endTime.toString()},${t.reminder.toString()},${t.isFavorite},${t.isComplete})");
   }
 
   Future<List<Task>> getAllTasks() async {
@@ -34,33 +32,32 @@ class TaskDatabase {
   Future<List<Task>> getCompletedTasks() async {
     final db = await initiateDatabase();
     final List<Map<String, Object?>> result =
-        await db.query('tasks', where: "isComplete =?", whereArgs: ["${true}"]);
+        await db.query('tasks', where: "isComplete =?", whereArgs: ["${1}"]);
     return result.map((e) => Task.fromMap(e)).toList();
-    // await database?.rawQuery("SELECT * from tasks where isComplete = ${true}");
   }
 
   Future<List<Task>> getUncompletedTasks() async {
     final db = await initiateDatabase();
     final List<Map<String, Object?>> result = await db
-        .query('tasks', where: "isComplete =?", whereArgs: ["${false}"]);
+        .query('tasks', where: "isComplete =?", whereArgs: ["${0}"]);
     return result.map((e) => Task.fromMap(e)).toList();
   }
 
   Future<List<Task>> getFavoriteTasks() async {
     final db = await initiateDatabase();
     final List<Map<String, Object?>> result =
-        await db.query('tasks', where: "isFavorite =?", whereArgs: ["${true}"]);
+        await db.query('tasks', where: "isFavorite =?", whereArgs: ["${1}"]);
     return result.map((e) => Task.fromMap(e)).toList();
   }
 
-  Future<int> updateFavoriteTask(Task task, bool isFavorite) async {
+  Future<int> updateFavoriteTask(Task task, int isFavorite) async {
     final db = await initiateDatabase();
     int result = await db.update('tasks', task.toMap(),
         where: 'isFavorite=?', whereArgs: [isFavorite]);
     return result; //return # updated records
   }
 
-  Future<int> updateCompletedTask(Task task, bool isCompleted) async {
+  Future<int> updateCompletedTask(Task task, int isCompleted) async {
     final db = await initiateDatabase();
     int result = await db.update('tasks', task.toMap(),
         where: 'isComplete=?', whereArgs: [isCompleted]);
